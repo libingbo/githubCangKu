@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- 数据源封装类 .数据源:获取数据库连接,spring-jdbc.jar中-->
+    <bean id="dataSouce" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    	<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+    	<property name="url" value="jdbc:mysql://***.***.***.***:3306/yanglaofuwu_db?characterEncoding=GBK"></property>
+    	<property name="username" value="root"></property>
+    	<property name="password" value="***"></property>
+    </bean>
+    <!-- 创建SqlSessionFactory对象 -->
+    <bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<!-- 数据库连接信息来源于dataSource -->
+    	<property name="dataSource" ref="dataSouce"></property>
+    	
+    	<!-- 注意其他配置 -->
+  		<property name="plugins">
+    		<array>
+      		<bean class="com.github.pagehelper.PageHelper">
+        		<property name="properties">
+          		<!--使用下面的方式配置参数，一行配置一个 -->
+          		<value>
+                        helperDialect=mysql
+                        reasonable=true
+                        supportMethodsArguments=true
+                        params=count=countSql
+                        autoRuntimeDialect=true
+                </value>
+        		</property>
+      		</bean>
+    		</array>
+  		</property>
+    </bean>
+    <!-- 扫描器相当于mybatis.xml中 mappers下package标签,扫描com.bjsxt.mapper包后会给对应接口创建对象-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    	<!-- 要扫描哪个包 -->
+    	<property name="basePackage" value="com.yanglao.mapper"></property>
+    	<!-- 和factory产生关系 -->
+    	<property name="sqlSessionFactory" ref="factory"></property>
+    </bean>
+    <!-- 由spring管理service实现类 -->
+    <bean id="userinfoimp" class="com.yanglao.service.imp.UserInfoImp">
+    	<property name="userinfoi" ref="userInfoI"></property>
+    </bean>
+    <bean id="workerserverimp" class="com.yanglao.service.imp.WorkerServerImp">
+    	<property name="workeri" ref="workerI"></property>
+    </bean>
+    <bean id="zhibanserviceimp" class="com.yanglao.service.imp.ZhiBanServiceImp">
+    	<property name="zhiBani" ref="zhiBanI"></property>
+    </bean>
+    <bean id="zyzserviceimp" class="com.yanglao.service.imp.ZyzServiceImp">
+    	<property name="zyzi" ref="zyzI"></property>
+    </bean>
+    <bean id="healthserviceimp" class="com.yanglao.service.imp.HealthServiceImp">
+    	<property name="healthi" ref="healthI"></property>
+    </bean>
+    <bean id="zhenduanserviceimp" class="com.yanglao.service.imp.ZhenDuanServiceImp">
+    	<property name="zhenduani" ref="zhenDuanI"></property>
+    </bean>
+    <bean id="adminserviceimp" class="com.yanglao.service.imp.AdminServiceImp">
+    	<property name="admini" ref="adminI"></property>
+    </bean>
+</beans>
